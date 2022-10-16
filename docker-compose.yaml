@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  pgsql:
+    image: postgres:14.0
+    container_name: pgsql
+    environment:
+      - POSTGRES_USER=blog
+      - POSTGRES_PASSWORD=blog
+      - POSTGRES_DB=blog
+    ulimits:
+      nofile:
+        soft: 40000
+        hard: 40000
+    volumes:
+      - ./.local/pgsql/data:/var/lib/pgsql
+    ports:
+      - 5432:5432
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    environment:
+      - HOST=0.0.0.0
+      - PROXY=true
+      - DATABASE_HOST=pgsql
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=blog
+      - DATABASE_USERNAME=blog
+      - DATABASE_PASSWORD=blog
+      - STRAPI_TELEMETRY_DISABLED=true
+      - ADMIN_JWT_SECRET=NByiR7Dl2bARt9qGrvnLRw==
+      - API_TOKEN_SALT=F9P0Mc//gq44Al0eEpsk6A==
+    depends_on:
+      - pgsql
+    ports:
+      - 1337:1337
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    environment:
+      - NEXT_PUBLIC_STRAPI_API_URL=http://backend:1337
+    depends_on:
+      - backend
+    ports:
+      - 3000:3000
