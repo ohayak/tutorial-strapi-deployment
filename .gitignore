@@ -116,3 +116,10 @@ exports
 *.cache
 build
 .strapi-updater.json
+
+############################
+# Terraform
+############################
+
+.terraform
+.terraform.lock.hcl
