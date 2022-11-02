@@ -9,12 +9,7 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-variable "container_name" {
-  type    = string
-  default = "vapi"
-}
-
-variable "container_port" {
+variable "backend_port" {
   type    = number
   default = 1337
 }

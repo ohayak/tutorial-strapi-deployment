@@ -4,9 +4,9 @@ resource "aws_lb" "strapi" {
   security_groups = [module.alb_security_group.security_group_id]
 }
 
-resource "aws_lb_target_group" "vapi_ecs_service" {
+resource "aws_lb_target_group" "backend_service" {
   name        = var.stack_name
-  port        = var.container_port
+  port        = var.backend_port
   protocol    = "HTTP"
   vpc_id      = module.vpc.vpc_id
   target_type = "ip"
@@ -31,14 +31,14 @@ resource "aws_lb_listener" "strapi" {
   port              = var.public_port
   protocol          = "HTTP"
   default_action {
-    # type             = "forward"
-    # target_group_arn = aws_lb_target_group.vapi_ecs_service[each.key].arn
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Welcome Strapi"
-      status_code  = "200"
-    }
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.backend_service.arn
+    # type = "fixed-response"
+    # fixed_response {
+    #   content_type = "text/plain"
+    #   message_body = "Welcome Strapi"
+    #   status_code  = "200"
+    # }
   }
 }
 

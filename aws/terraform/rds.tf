@@ -66,9 +66,9 @@ module "database" {
   publicly_accessible = true
 
   iam_database_authentication_enabled = false
-  db_name                             = var.stack_name
-  username                            = var.stack_name
-  password                            = var.stack_name
+  db_name                             = "strapi"
+  username                            = "strapi"
+  password                            = "strapi123"
   create_random_password              = false
   create_db_parameter_group           = false
   parameter_group_use_name_prefix     = false

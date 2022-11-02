@@ -3,7 +3,6 @@ terraform {
     bucket  = "strapi-tutorial-terraform-backend-sbx"
     key     = "terraform.tfstate"
     region  = "eu-west-1"
-    profile = "vallai-sbx"
   }
 
   #  required_version = "~> 1.2.0"
@@ -18,5 +17,4 @@ terraform {
 
 provider "aws" {
   region  = var.aws_region
-  profile = "vallai-sbx"
 }

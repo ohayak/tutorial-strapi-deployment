@@ -1,6 +1,7 @@
 
 resource "aws_s3_bucket" "strapi_assets" {
   bucket = "${var.stack_name}-assets"
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_acl" "vapi_assets_acl" {
