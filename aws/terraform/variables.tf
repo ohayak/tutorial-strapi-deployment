@@ -9,10 +9,6 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-
-
-}
-
 variable "container_name" {
   type    = string
   default = "vapi"
@@ -24,7 +20,7 @@ variable "container_port" {
 }
 
 variable "public_port" {
-  type = number
+  type    = number
   default = 80
 }
 

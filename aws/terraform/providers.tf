@@ -1,13 +1,13 @@
 terraform {
   backend "s3" {
-    bucket = "strapi-tutorial-terraform-backend-sbx"
-    key    = "terraform.tfstate"
-    region = "eu-west-1"
-    profile= "vallai-sbx"
+    bucket  = "strapi-tutorial-terraform-backend-sbx"
+    key     = "terraform.tfstate"
+    region  = "eu-west-1"
+    profile = "vallai-sbx"
   }
 
-#  required_version = "~> 1.2.0"
-  
+  #  required_version = "~> 1.2.0"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"

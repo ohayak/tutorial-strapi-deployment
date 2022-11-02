@@ -1,28 +1,29 @@
-resource "aws_ecr_repository" "image-repo" {
-  name = "strapi-tutu"
+resource "aws_ecr_repository" "image_repo" {
+  name = var.stack_name
 
   image_scanning_configuration {
     scan_on_push = false
   }
 }
 resource "aws_ecr_lifecycle_policy" "policy" {
-  repository = aws_ecr_repository.image-repo.name
+  repository = aws_ecr_repository.image_repo.name
 
-  policy = <<EOF
-  {
-    "rules": [
-      {
-        "rulePriority": 1,
-        "selection": {
-            "tagStatus": "tagged",
-            "tagPrefixList": ["dev"],
-            "countType": "imageCountMoreThan",
-            "countNumber": 1
-        },
-        "action": {
-            "type": "expire"
+  policy = jsonencode(
+    {
+      "rules" : [
+        {
+          "rulePriority" : 1,
+          "selection" : {
+            "tagStatus" : "tagged",
+            "tagPrefixList" : ["latest"],
+            "countType" : "imageCountMoreThan",
+            "countNumber" : 1
+          },
+          "action" : {
+            "type" : "expire"
+          }
         }
-    ]
-  }
-  EOF
+      ]
+    }
+  )
 }

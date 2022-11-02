@@ -5,10 +5,10 @@ resource "aws_lb" "strapi" {
 }
 
 resource "aws_lb_target_group" "vapi_ecs_service" {
-  name     = var.stack_name
-  port     = var.container_port
-  protocol = "HTTP"
-  vpc_id   = module.vpc.vpc_id
+  name        = var.stack_name
+  port        = var.container_port
+  protocol    = "HTTP"
+  vpc_id      = module.vpc.vpc_id
   target_type = "ip"
 
   health_check {
@@ -82,22 +82,22 @@ resource "aws_lb_listener" "strapi" {
 # }
 
 module "alb_security_group" {
-  source  = "terraform-aws-modules/security-group/aws"
+  source = "terraform-aws-modules/security-group/aws"
 
-  name        = "-alb-sg"
+  name        = "${var.stack_name}-alb-sg"
   description = "Security group for Strapi ALB"
   vpc_id      = module.vpc.vpc_id
 
   ingress_with_cidr_blocks = [
     {
-      rule = "http-80-tcp"
+      rule        = "http-80-tcp"
       cidr_blocks = "0.0.0.0/0" #tfsec:ignore:AWS008
     },
     {
-      rule = "https-443-tcp"
+      rule        = "https-443-tcp"
       cidr_blocks = "0.0.0.0/0" #tfsec:ignore:AWS008
     },
   ]
-  
+
   egress_rules = ["all-all"]
 }
