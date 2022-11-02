@@ -9,14 +9,8 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-variable "site_domain" {
-  type    = string
-  default = "vall.ai"
-}
 
-variable "email_from" {
-  type    = string
-  default = "contact@vall.ai"
+
 }
 
 variable "container_name" {

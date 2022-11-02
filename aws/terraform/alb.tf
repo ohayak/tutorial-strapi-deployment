@@ -5,7 +5,7 @@ resource "aws_lb" "strapi" {
 }
 
 resource "aws_lb_target_group" "vapi_ecs_service" {
-  name     = "${var.stack_name}"
+  name     = var.stack_name
   port     = var.container_port
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
@@ -84,7 +84,7 @@ resource "aws_lb_listener" "strapi" {
 module "alb_security_group" {
   source  = "terraform-aws-modules/security-group/aws"
 
-  name        = "${var.stack_name}-alb-sg"
+  name        = "-alb-sg"
   description = "Security group for Strapi ALB"
   vpc_id      = module.vpc.vpc_id
 
