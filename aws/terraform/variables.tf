@@ -14,9 +14,19 @@ variable "backend_port" {
   default = 1337
 }
 
+variable "frontend_port" {
+  type    = number
+  default = 3000
+}
+
 variable "public_port" {
   type    = number
   default = 80
+}
+
+variable "private_port" {
+  type    = number
+  default = 1337
 }
 
 variable "fargate_cpu" {

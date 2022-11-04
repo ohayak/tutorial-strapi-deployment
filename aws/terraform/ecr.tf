@@ -17,7 +17,20 @@ resource "aws_ecr_lifecycle_policy" "policy" {
           "rulePriority" : 1,
           "selection" : {
             "tagStatus" : "tagged",
-            "tagPrefixList" : ["latest"],
+            "tagPrefixList" : ["backend"],
+            "countType" : "imageCountMoreThan",
+            "countNumber" : 1
+          },
+          "action" : {
+            "type" : "expire"
+          }
+
+        },
+        {
+          "rulePriority" : 2,
+          "selection" : {
+            "tagStatus" : "tagged",
+            "tagPrefixList" : ["frontend"],
             "countType" : "imageCountMoreThan",
             "countNumber" : 1
           },
