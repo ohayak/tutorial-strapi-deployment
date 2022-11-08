@@ -44,6 +44,7 @@ resource "aws_ecs_task_definition" "strapi" {
     {
       name = "frontend"
       image = "${aws_ecr_repository.image_repository.repository_url}:frontend"
+      essential = false
       portMappings = [
         {
           containerPort = var.frontend_port
@@ -81,6 +82,7 @@ resource "aws_ecs_task_definition" "strapi" {
     {
       name = "backend"
       image = "${aws_ecr_repository.image_repository.repository_url}:backend"
+      essential = true
       portMappings = [
         {
           containerPort = var.backend_port
@@ -151,10 +153,6 @@ resource "aws_ecs_task_definition" "strapi" {
       }
     }
   ])
-
-  lifecycle {
-    ignore_changes = [container_definitions]
-  }
 }
 
 resource "aws_ecs_service" "backend" {
