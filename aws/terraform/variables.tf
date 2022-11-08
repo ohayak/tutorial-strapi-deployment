@@ -24,11 +24,6 @@ variable "public_port" {
   default = 80
 }
 
-variable "private_port" {
-  type    = number
-  default = 1337
-}
-
 variable "fargate_cpu" {
   description = "Fargate instance CPU units to provision (1 vCPU = 1024 CPU units)"
   default     = "1024"

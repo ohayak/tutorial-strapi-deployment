@@ -64,7 +64,7 @@ resource "aws_ecs_task_definition" "strapi" {
         },
         {
           name = "NEXT_PUBLIC_STRAPI_API_URL"
-          value = "http://backend:1337"
+          value = "http://${aws_lb.strapi.dns_name}:1337"
         }
 
       ]
@@ -125,7 +125,7 @@ resource "aws_ecs_task_definition" "strapi" {
         },
         {
           name = "URL"
-          value = "http://${aws_lb.strapi.dns_name}"
+          value = "http://${aws_lb.strapi.dns_name}:${var.backend_port}"
         },
         {
           name = "ADMIN_JWT_SECRET"
@@ -152,9 +152,9 @@ resource "aws_ecs_task_definition" "strapi" {
     }
   ])
 
-#  lifecycle {
-#    ignore_changes = [container_definitions]
-#  }
+  lifecycle {
+    ignore_changes = [container_definitions]
+  }
 }
 
 resource "aws_ecs_service" "backend" {
@@ -170,10 +170,13 @@ resource "aws_ecs_service" "backend" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.backend_service.arn
+    target_group_arn = aws_lb_target_group.backend.arn
     container_name   = "backend"
     container_port   = var.backend_port
   }
+#  service_registries {
+#    registry_arn = aws_service_discovery_service.strapi_service.arn
+#  }
 
 }
 
@@ -190,8 +193,32 @@ resource "aws_ecs_service" "frontend" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.frontend_service.arn
+    target_group_arn = aws_lb_target_group.frontend.arn
     container_name   = "frontend"
     container_port   = var.frontend_port
   }
+#  service_registries {
+#    registry_arn = aws_service_discovery_service.strapi_service.arn
+#  }
 }
+#
+#resource "aws_service_discovery_private_dns_namespace" "segement" {
+#  name = "network"
+#  description = "domaine for intern services"
+#  vpc  = module.vpc.name
+#}
+#
+#resource "aws_service_discovery_service" "strapi_service" {
+#  name = "starpi_service"
+#  dns_config {
+#    namespace_id = aws_service_discovery_private_dns_namespace.segement.id
+#    routing_policy = "MULTIVALUE"
+#    dns_records {
+#      ttl  = 10
+#      type = "A"
+#    }
+#  }
+#  health_check_config {
+#    failure_threshold = 5
+#  }
+#}

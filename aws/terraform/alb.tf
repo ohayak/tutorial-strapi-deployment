@@ -4,7 +4,7 @@ resource "aws_lb" "strapi" {
   security_groups = [module.alb_security_group.security_group_id]
 }
 
-resource "aws_lb_target_group" "backend_service" {
+resource "aws_lb_target_group" "backend" {
   name        = var.stack_name
   port        = var.backend_port
   protocol    = "HTTP"
@@ -20,12 +20,9 @@ resource "aws_lb_target_group" "backend_service" {
     path                = "/_health"
     unhealthy_threshold = "2"
   }
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
-resource "aws_lb_target_group" "frontend_service" {
+resource "aws_lb_target_group" "frontend" {
   name        = "frontend"
   port        = var.frontend_port
   protocol    = "HTTP"
@@ -41,10 +38,6 @@ resource "aws_lb_target_group" "frontend_service" {
     path                = "/"
     unhealthy_threshold = "2"
   }
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_lb_listener" "backend" {
@@ -53,19 +46,19 @@ resource "aws_lb_listener" "backend" {
   protocol          = "HTTP"
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.backend_service.arn
+    target_group_arn = aws_lb_target_group.backend.arn
   }
 }
+
 resource "aws_lb_listener" "frontend" {
   load_balancer_arn = aws_lb.strapi.arn
   port              = var.frontend_port
   protocol          = "HTTP"
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.frontend_service.arn
+    target_group_arn = aws_lb_target_group.frontend.arn
   }
 }
-
 
 module "alb_security_group" {
   source = "terraform-aws-modules/security-group/aws"
@@ -76,11 +69,9 @@ module "alb_security_group" {
 
   ingress_with_cidr_blocks = [
     {
-      rule        = "http-80-tcp"
-      cidr_blocks = "0.0.0.0/0" #tfsec:ignore:AWS008
-    },
-    {
-      rule        = "https-443-tcp"
+      from_port                = var.public_port
+      to_port                  = var.public_port
+      protocol                 = "tcp"
       cidr_blocks = "0.0.0.0/0" #tfsec:ignore:AWS008
     },
     {
